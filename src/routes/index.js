@@ -4,7 +4,7 @@ const router = express.Router();
 const coursesRouter = require('./courses');
 const categoriesRouter = require('./categories');
 
-router.use(coursesRouter);
-router.use(categoriesRouter);
+router.use('/courses', coursesRouter);
+router.use('/categories', categoriesRouter);
 
 module.exports = router;
