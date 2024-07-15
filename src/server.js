@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use('/api', routes);
 
 // 配置静态文件目录
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
