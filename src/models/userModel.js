@@ -11,3 +11,11 @@ exports.createUser = async (userData) => {
   );
   return result.rows[0];
 };
+
+exports.getUserByEmail = async (email) => {
+  const result = await db.query(
+    `SELECT * FROM "Users" WHERE "email" = $1`,
+    [email]
+  );
+  return result.rows[0];
+};
