@@ -2,7 +2,15 @@ const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
+  const { email } = req.body;
+
   try {
+    // check if the email already exists
+    const existingUser = await userModel.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ msg: 'Email already exists' });
+    }
+
     const user = await userModel.createUser(req.body);
     res.status(201).json(user);
   } catch (err) {
