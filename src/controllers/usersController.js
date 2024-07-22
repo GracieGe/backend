@@ -35,7 +35,7 @@ exports.loginUser = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.userid,
+        id: user.userId,
         role: user.role
       }
     };
@@ -46,7 +46,7 @@ exports.loginUser = async (req, res) => {
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token, user: { id: user.userid, email: user.email, role: user.role } });
+        res.json({ token, user: { id: user.userId, email: user.email, role: user.role } });
       }
     );
   } catch (err) {

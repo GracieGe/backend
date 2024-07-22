@@ -16,14 +16,14 @@ exports.createOrder = async (orderData) => {
 
 exports.getOrdersByUser = async (userId) => {
   const result = await db.query(`
-    SELECT o.*, c."courseName", c."grade"
-    FROM "Orders" o
-    JOIN "Courses" c ON o."courseId" = c."courseId"
-    WHERE o."userId" = $1
+    SELECT o.*, c."courseName", c."grade", c."image"
+      FROM "Orders" o
+      JOIN "Courses" c ON o."courseId" = c."courseId"
+      WHERE o."userId" = $1
   `, [userId]);
 
   if (result.rows.length === 0) {
-    throw new Error('No orders found');
+    throw new Error('No courses found');
   }
 
   return result.rows;

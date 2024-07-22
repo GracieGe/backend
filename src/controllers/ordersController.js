@@ -2,7 +2,9 @@ const orderModel = require('../models/orderModel');
 
 exports.createOrder = async (req, res) => {
   try {
-    const order = await orderModel.createOrder(req.body);
+    const userId = req.user.id;
+    const orderData = { ...req.body, userId }; 
+    const order = await orderModel.createOrder(orderData);
     res.status(201).json(order);
   } catch (err) {
     console.error('Error inserting order:', err.message);
@@ -11,7 +13,7 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.getOrdersByUser = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.id; 
   try {
     const orders = await orderModel.getOrdersByUser(userId);
     res.status(200).json(orders);
