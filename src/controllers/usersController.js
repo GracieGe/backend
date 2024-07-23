@@ -12,7 +12,24 @@ exports.createUser = async (req, res) => {
     }
 
     const user = await userModel.createUser(req.body);
-    res.status(201).json(user);
+
+    // Generate JWT token
+    const payload = {
+      user: {
+        id: user.userId,
+        role: user.role
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET || 'your_jwt_secret',
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) throw err;
+        res.status(201).json({ token, user: { id: user.userId, email: user.email, role: user.role } });
+      }
+    );
   } catch (err) {
     console.error('Error creating user:', err.message);
     res.status(500).send('Server error');
