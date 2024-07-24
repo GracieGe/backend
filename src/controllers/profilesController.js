@@ -7,7 +7,11 @@ exports.createProfile = async (req, res) => {
       return res.status(400).json({ error: err });
     }
 
-    const { userId, role, fullName, gender, age, phoneNum, birthday, grade } = req.body;
+    const { userId, role, fullName, gender, age, phoneNum, birthday } = req.body;
+    let grade = null;
+    if (role === 'student') {
+      grade = req.body.grade;
+    }
     const photo = req.file ? `/images/${role === 'student' ? 'students' : 'teachers'}/${req.file.filename}` : null;
 
     try {
