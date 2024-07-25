@@ -1,9 +1,9 @@
 const teacherModel = require('../models/teacherModel');
 
-exports.getSignedTeachersByCategory = async (req, res) => {
+exports.getSignedTeachers = async (req, res) => {
   const { categoryId } = req.query;
   try {
-    const teachers = await teacherModel.getSignedTeachersByCategory(categoryId);
+    const teachers = await teacherModel.getSignedTeachers(categoryId);
     res.json(teachers);
   } catch (err) {
     console.error('Error fetching signed teachers:', err.message);

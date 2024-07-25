@@ -1,6 +1,6 @@
 const db = require('./db');
 
-exports.getSignedTeachersByCategory = async (categoryId) => {
+exports.getSignedTeachers = async (categoryId) => {
   let result;
   try {
     if (categoryId) {
@@ -9,14 +9,14 @@ exports.getSignedTeachersByCategory = async (categoryId) => {
         throw new Error('Invalid categoryId');
       }
       result = await db.query(`
-        SELECT t.*
+        SELECT t.*, c."courseName", c."grade"
         FROM "Teachers" t
         INNER JOIN "Courses" c ON t."courseId" = c."courseId"
         WHERE t."status" = $1 AND c."categoryId" = $2
       `, ['Signed', categoryIdInt]);
     } else {
       result = await db.query(`
-        SELECT t.*
+        SELECT t.*, c."courseName", c."grade"
         FROM "Teachers" t
         INNER JOIN "Courses" c ON t."courseId" = c."courseId"
         WHERE t."status" = $1
