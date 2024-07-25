@@ -7,6 +7,7 @@ const ordersRouter = require('./orders');
 const usersRouter = require('./users');
 const profilesRouter = require('./profiles');
 const protectedRoutes = require('./protectedRoutes');
+const teachersRouter = require('./teachers');
 
 router.use('/courses', coursesRouter);
 router.use('/categories', categoriesRouter);
@@ -14,5 +15,6 @@ router.use('/orders', ordersRouter);
 router.use('/users', usersRouter);
 router.use('/profiles', profilesRouter);
 router.use('/protected', protectedRoutes);
+router.use('/teachers', teachersRouter);
 
 module.exports = router;
