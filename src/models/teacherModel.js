@@ -28,3 +28,15 @@ exports.getSignedTeachers = async (categoryId) => {
     throw err;
   }
 };
+
+exports.getTeacherById = async (teacherId) => {
+  const teacherIdInt = parseInt(teacherId, 10);
+  if (isNaN(teacherIdInt)) {
+    throw new Error('Invalid teacherId');
+  }
+  const result = await db.query('SELECT * FROM "Teachers" WHERE "teacherId" = $1', [teacherIdInt]);
+  if (result.rows.length === 0) {
+    throw new Error('Teacher not found');
+  }
+  return result.rows[0];
+};

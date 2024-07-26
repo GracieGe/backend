@@ -10,3 +10,14 @@ exports.getSignedTeachers = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getTeacherById = async (req, res) => {
+  const { teacherId } = req.params;
+  try {
+    const teacher = await teacherModel.getTeacherById(teacherId);
+    res.json(teacher);
+  } catch (err) {
+    console.error('Error fetching teacher:', err.message);
+    res.status(500).send('Server error');
+  }
+};
