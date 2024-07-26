@@ -40,3 +40,23 @@ exports.getTeacherById = async (teacherId) => {
   }
   return result.rows[0];
 };
+
+exports.getSignedTeachersByCourseId = async (courseId) => {
+  try {
+    const courseIdInt = parseInt(courseId, 10);
+    if (isNaN(courseIdInt)) {
+      throw new Error('Invalid courseId');
+    }
+    const result = await db.query(`
+      SELECT t.*, c."courseName", c."grade"
+      FROM "Teachers" t
+      INNER JOIN "Courses" c ON t."courseId" = c."courseId"
+      WHERE t."status" = $1 AND c."courseId" = $2
+    `, ['Signed', courseIdInt]);
+    
+    return result.rows;
+  } catch (err) {
+    console.error('Error fetching signed teachers by courseId:', err.message);
+    throw err;
+  }
+};
