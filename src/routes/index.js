@@ -9,6 +9,7 @@ const profilesRouter = require('./profiles');
 const protectedRoutes = require('./protectedRoutes');
 const teachersRouter = require('./teachers');
 const slotsRouter = require('./slots');
+const addressesRouter = require('./addresses');
 
 router.use('/courses', coursesRouter);
 router.use('/categories', categoriesRouter);
@@ -18,5 +19,6 @@ router.use('/profiles', profilesRouter);
 router.use('/protected', protectedRoutes);
 router.use('/teachers', teachersRouter);
 router.use('/slots', slotsRouter);
+router.use('/addresses', addressesRouter);
 
 module.exports = router;

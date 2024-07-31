@@ -1,8 +1,8 @@
 const addressModel = require('../models/addressModel');
 
 exports.getUserAddresses = async (req, res) => {
-  const { userId } = req.params;
   try {
+    const userId = req.user.id; 
     const addresses = await addressModel.getUserAddresses(userId);
     if (addresses.length === 0) {
       return res.status(404).json({ msg: 'No addresses found for this user' });
