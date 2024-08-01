@@ -5,5 +5,7 @@ const authMiddleware = require('../middleware/auth');
 
 router.get('/', authMiddleware, addressesController.getUserAddresses);
 router.post('/', authMiddleware, addressesController.addNewAddress);
+router.get('/:addressId', authMiddleware, addressesController.getAddressById);
+router.put('/:addressId', authMiddleware, addressesController.updateAddress);
 
 module.exports = router;

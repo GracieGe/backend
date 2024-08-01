@@ -30,3 +30,42 @@ exports.addNewAddress = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getAddressById = async (req, res) => {
+  try {
+    const { addressId } = req.params;
+    const address = await addressModel.getAddressById(addressId);
+
+    if (!address) {
+      return res.status(404).json({ msg: 'Address not found' });
+    }
+
+    res.json(address);
+  } catch (err) {
+    console.error('Error fetching address:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.updateAddress = async (req, res) => {
+  try {
+    const { addressId } = req.params;
+    const { address, label } = req.body;
+    const userId = req.user.id; 
+
+    if (!address || !label) {
+      return res.status(400).json({ msg: 'Address and label are required' });
+    }
+
+    const updatedAddress = await addressModel.updateAddress(userId, addressId, address, label);
+
+    if (!updatedAddress) {
+      return res.status(404).json({ msg: 'Address not found or user not authorized' });
+    }
+
+    res.json(updatedAddress);
+  } catch (err) {
+    console.error('Error updating address:', err.message);
+    res.status(500).send('Server error');
+  }
+};
