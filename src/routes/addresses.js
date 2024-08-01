@@ -4,5 +4,6 @@ const addressesController = require('../controllers/addressesController');
 const authMiddleware = require('../middleware/auth');
 
 router.get('/', authMiddleware, addressesController.getUserAddresses);
+router.post('/', authMiddleware, addressesController.addNewAddress);
 
 module.exports = router;
