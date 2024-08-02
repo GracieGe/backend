@@ -24,3 +24,16 @@ exports.getAvailableSlots = async (teacherId, date) => {
     throw new Error('Failed to fetch available slots');
   }
 };
+
+exports.updateSlot = async (slotId, newLocation, newStatus) => {
+  try {
+    await db.query(
+      `UPDATE "Slots" 
+       SET "location" = $1, "status" = $2
+       WHERE "slotId" = $3`,
+      [newLocation, newStatus, slotId]
+    );
+  } catch (err) {
+    throw new Error('Failed to update slot');
+  }
+};

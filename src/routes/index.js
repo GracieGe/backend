@@ -10,6 +10,7 @@ const protectedRoutes = require('./protectedRoutes');
 const teachersRouter = require('./teachers');
 const slotsRouter = require('./slots');
 const addressesRouter = require('./addresses');
+const studentsRouter = require('./students');
 
 router.use('/courses', coursesRouter);
 router.use('/categories', categoriesRouter);
@@ -20,5 +21,6 @@ router.use('/protected', protectedRoutes);
 router.use('/teachers', teachersRouter);
 router.use('/slots', slotsRouter);
 router.use('/addresses', addressesRouter);
+router.use('/students', studentsRouter);
 
 module.exports = router;
