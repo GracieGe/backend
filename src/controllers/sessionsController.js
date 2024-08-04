@@ -21,3 +21,23 @@ exports.addSession = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getActiveSessionsByStudentId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain studentId
+    const student = await studentModel.getStudentIdByUserId(userId);
+    if (!student) {
+      return res.status(404).json({ msg: 'Student not found' });
+    }
+    const studentId = student.studentId;
+
+    // obtain active sessions
+    const sessions = await sessionModel.getActiveSessionsByStudentId(studentId);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching active sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
