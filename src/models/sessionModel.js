@@ -53,3 +53,32 @@ exports.updateSessionStatus = async (sessionId, status) => {
     throw new Error('Failed to update session status');
   }
 };
+
+exports.getCompletedSessionsByStudentId = async (studentId) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        s."sessionId",
+        s."date",
+        s."startTime",
+        s."endTime",
+        s."location",
+        t."fullName",
+        c."courseName",
+        c."grade",
+        c."image"
+      FROM 
+        "Sessions" s
+      JOIN 
+        "Teachers" t ON s."teacherId" = t."teacherId"
+      JOIN 
+        "Courses" c ON t."courseId" = c."courseId"
+      WHERE 
+        s."studentId" = $1 AND s."status" = 'Completed'`,
+      [studentId]
+    );
+    return result.rows;
+  } catch (err) {
+    throw new Error('Failed to fetch completed sessions');
+  }
+};

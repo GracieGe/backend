@@ -57,3 +57,23 @@ exports.updateSessionStatus = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getCompletedSessionsByStudentId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain studentId
+    const student = await studentModel.getStudentIdByUserId(userId);
+    if (!student) {
+      return res.status(404).json({ msg: 'Student not found' });
+    }
+    const studentId = student.studentId;
+
+    // obtain completed sessions
+    const sessions = await sessionModel.getCompletedSessionsByStudentId(studentId);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching completed sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
