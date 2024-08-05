@@ -16,7 +16,7 @@ exports.getActiveSessionsByStudentId = async (studentId) => {
   try {
     const result = await db.query(
       `SELECT 
-        s."slotId",
+        s."sessionId",
         s."date",
         s."startTime",
         s."endTime",
@@ -38,5 +38,18 @@ exports.getActiveSessionsByStudentId = async (studentId) => {
     return result.rows;
   } catch (err) {
     throw new Error('Failed to fetch active sessions');
+  }
+};
+
+exports.updateSessionStatus = async (sessionId, status) => {
+  try {
+    await db.query(
+      `UPDATE "Sessions" 
+       SET "status" = $1
+       WHERE "sessionId" = $2`,
+      [status, sessionId]
+    );
+  } catch (err) {
+    throw new Error('Failed to update session status');
   }
 };

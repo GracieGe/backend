@@ -41,3 +41,19 @@ exports.getActiveSessionsByStudentId = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.updateSessionStatus = async (req, res) => {
+  const { sessionId } = req.body;
+
+  if (!sessionId) {
+    return res.status(400).json({ message: 'Session ID is required' });
+  }
+
+  try {
+    await sessionModel.updateSessionStatus(sessionId, 'Completed');
+    res.status(200).json({ message: 'Session status updated successfully' });
+  } catch (err) {
+    console.error('Error updating session status:', err.message);
+    res.status(500).send('Server error');
+  }
+};

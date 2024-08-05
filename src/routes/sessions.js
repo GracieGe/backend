@@ -5,5 +5,6 @@ const auth = require('../middleware/auth');
 
 router.post('/addSession', auth, sessionsController.addSession); 
 router.get('/activeSessions', auth, sessionsController.getActiveSessionsByStudentId);
+router.post('/updateStatus', auth, sessionsController.updateSessionStatus);
 
 module.exports = router;
