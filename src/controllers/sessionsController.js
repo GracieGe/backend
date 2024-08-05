@@ -1,5 +1,6 @@
 const sessionModel = require('../models/sessionModel');
 const studentModel = require('../models/studentModel');
+const { uploadAudio } = require('../middleware/upload');
 
 exports.addSession = async (req, res) => {
   const { slotId, teacherId, location, date, startTime, endTime } = req.body;
@@ -42,7 +43,7 @@ exports.getActiveSessionsByStudentId = async (req, res) => {
   }
 };
 
-exports.updateSessionStatus = async (req, res) => {
+exports.updateCompletedSessionStatus = async (req, res) => {
   const { sessionId } = req.body;
 
   if (!sessionId) {
@@ -50,7 +51,7 @@ exports.updateSessionStatus = async (req, res) => {
   }
 
   try {
-    await sessionModel.updateSessionStatus(sessionId, 'Completed');
+    await sessionModel.updateCompletedSessionStatus(sessionId, 'Completed');
     res.status(200).json({ message: 'Session status updated successfully' });
   } catch (err) {
     console.error('Error updating session status:', err.message);
@@ -76,4 +77,66 @@ exports.getCompletedSessionsByStudentId = async (req, res) => {
     console.error('Error fetching completed sessions:', err.message);
     res.status(500).send('Server error');
   }
+};
+
+exports.updateCancelledSessionStatus = async (req, res) => {
+  const { sessionId } = req.body;
+
+  if (!sessionId) {
+    return res.status(400).json({ message: 'Session ID is required' });
+  }
+
+  try {
+    await sessionModel.updateCancelledSessionStatus(sessionId, 'Cancelled');
+    res.status(200).json({ message: 'Session status updated successfully' });
+  } catch (err) {
+    console.error('Error updating session status:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.getCancelledSessionsByStudentId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain studentId
+    const student = await studentModel.getStudentIdByUserId(userId);
+    if (!student) {
+      return res.status(404).json({ msg: 'Student not found' });
+    }
+    const studentId = student.studentId;
+
+    // obtain completed sessions
+    const sessions = await sessionModel.getCancelledSessionsByStudentId(studentId);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching cancelled sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.uploadRecording = async (req, res) => {
+  uploadAudio(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ msg: err });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No file uploaded' });
+    }
+
+    const { sessionId } = req.body;
+    const userRole = req.user.role;
+
+    try {
+      // Save recording URL
+      const recordingUrl = `/uploads/${req.user.role === 'student' ? 'students' : 'teachers'}/${req.file.filename}`;
+      await sessionModel.updateRecordingUrl(sessionId, recordingUrl, userRole);
+
+      res.status(200).json({ msg: 'Recording uploaded successfully', recordingUrl });
+    } catch (err) {
+      console.error('Error uploading recording:', err.message);
+      res.status(500).send('Server error');
+    }
+  });
 };
