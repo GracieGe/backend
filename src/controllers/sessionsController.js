@@ -133,7 +133,6 @@ exports.uploadRecording = async (req, res) => {
     try {
       // Save recording URL
       const recordingUrl = `/uploads/${userRole === 'student' ? 'students' : 'teachers'}/${req.file.filename}`;
-      console.log('Recording URL:', recordingUrl);
       await sessionModel.updateRecordingUrl(sessionId, recordingUrl, userRole);
 
       res.status(200).json({ msg: 'Recording uploaded successfully', recordingUrl });
