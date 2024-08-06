@@ -118,10 +118,12 @@ exports.getCancelledSessionsByStudentId = async (req, res) => {
 exports.uploadRecording = async (req, res) => {
   uploadAudio(req, res, async (err) => {
     if (err) {
+      console.error('Multer error:', err);
       return res.status(400).json({ msg: err });
     }
 
     if (!req.file) {
+      console.error('No file uploaded');
       return res.status(400).json({ msg: 'No file uploaded' });
     }
 
@@ -130,7 +132,8 @@ exports.uploadRecording = async (req, res) => {
 
     try {
       // Save recording URL
-      const recordingUrl = `/uploads/${req.user.role === 'student' ? 'students' : 'teachers'}/${req.file.filename}`;
+      const recordingUrl = `/uploads/${userRole === 'student' ? 'students' : 'teachers'}/${req.file.filename}`;
+      console.log('Recording URL:', recordingUrl);
       await sessionModel.updateRecordingUrl(sessionId, recordingUrl, userRole);
 
       res.status(200).json({ msg: 'Recording uploaded successfully', recordingUrl });

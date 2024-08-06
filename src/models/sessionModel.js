@@ -128,7 +128,7 @@ exports.getCancelledSessionsByStudentId = async (studentId) => {
 
 exports.updateRecordingUrl = async (sessionId, recordingUrl, role) => {
   try {
-    const column = role === 'teacher' ? 'recording_teacher' : 'recording_student';
+    const column = role === 'student' ? 'recording_student' : 'recording_teacher';
     await db.query(
       `UPDATE "Sessions" 
        SET "${column}" = $1 
