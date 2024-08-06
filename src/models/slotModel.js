@@ -37,3 +37,16 @@ exports.updateSlot = async (slotId, newLocation, newStatus) => {
     throw new Error('Failed to update slot');
   }
 };
+
+exports.unbookSlot = async (slotId) => {
+  try {
+    await db.query(
+      `UPDATE "Slots" 
+       SET "status" = 'Unbooked', "location" = NULL
+       WHERE "slotId" = $1`,
+      [slotId]
+    );
+  } catch (err) {
+    throw new Error('Failed to unbook slot');
+  }
+};

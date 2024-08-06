@@ -17,6 +17,7 @@ exports.getActiveSessionsByStudentId = async (studentId) => {
     const result = await db.query(
       `SELECT 
         s."sessionId",
+        s."slotId",
         s."date",
         s."startTime",
         s."endTime",
