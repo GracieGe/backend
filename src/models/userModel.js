@@ -1,21 +1,21 @@
 const db = require('./db');
 
 exports.createUser = async (userData) => {
-  const { email, password, role, timeOfCreation } = userData;
+  const { phoneNumber, password, role, timeOfCreation } = userData;
 
   const result = await db.query(
-    `INSERT INTO "Users" ("email", "password", "role", "timeOfCreation")
+    `INSERT INTO "Users" ("phoneNumber", "password", "role", "timeOfCreation")
      VALUES ($1, $2, $3, $4)
      RETURNING *`,
-    [email, password, role, timeOfCreation]
+    [phoneNumber, password, role, timeOfCreation]
   );
   return result.rows[0];
 };
 
-exports.getUserByEmail = async (email) => {
+exports.getUserByPhoneNumber = async (phoneNumber) => {
   const result = await db.query(
-    `SELECT * FROM "Users" WHERE "email" = $1`,
-    [email]
+    `SELECT * FROM "Users" WHERE "phoneNumber" = $1`,
+    [phoneNumber]
   );
   return result.rows[0];
 };

@@ -2,13 +2,13 @@ const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
-  const { email } = req.body;
+  const { phoneNumber } = req.body;
 
   try {
     // check if the email already exists
-    const existingUser = await userModel.getUserByEmail(email);
+    const existingUser = await userModel.getUserByPhoneNumber(phoneNumber);
     if (existingUser) {
-      return res.status(400).json({ msg: 'Email already exists' });
+      return res.status(400).json({ msg: 'Phone number already exists' });
     }
 
     const user = await userModel.createUser(req.body);
@@ -27,7 +27,7 @@ exports.createUser = async (req, res) => {
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        res.status(201).json({ token, user: { id: user.userId, email: user.email, role: user.role } });
+        res.status(201).json({ token, user: { id: user.userId, phoneNumber: user.phoneNumber, role: user.role } });
       }
     );
   } catch (err) {
@@ -37,10 +37,10 @@ exports.createUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { phoneNumber, password } = req.body;
 
   try {
-    const user = await userModel.getUserByEmail(email);
+    const user = await userModel.getUserByPhoneNumber(phoneNumber);
 
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });
@@ -63,7 +63,7 @@ exports.loginUser = async (req, res) => {
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token, user: { id: user.userId, email: user.email, role: user.role } });
+        res.json({ token, user: { id: user.userId, phoneNumber: user.phoneNumber, role: user.role } });
       }
     );
   } catch (err) {
