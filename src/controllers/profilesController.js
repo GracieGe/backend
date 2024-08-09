@@ -33,7 +33,6 @@ exports.createProfile = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   const userId = req.user.id;
-  console.log('Received request to fetch profile for userId:', userId);
 
   try {
     const role = await profileModel.getUserRole(userId);
