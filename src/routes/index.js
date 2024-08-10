@@ -12,6 +12,7 @@ const slotsRouter = require('./slots');
 const addressesRouter = require('./addresses');
 const studentsRouter = require('./students');
 const sessionsRouter = require('./sessions');
+const conversationsRouter = require('./conversations');
 
 router.use('/courses', coursesRouter);
 router.use('/categories', categoriesRouter);
@@ -24,5 +25,6 @@ router.use('/slots', slotsRouter);
 router.use('/addresses', addressesRouter);
 router.use('/students', studentsRouter);
 router.use('/sessions', sessionsRouter);
+router.use('/conversations', conversationsRouter);
 
 module.exports = router;

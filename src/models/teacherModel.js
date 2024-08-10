@@ -61,3 +61,15 @@ exports.getSignedTeachersByCourseId = async (courseId) => {
     throw err;
   }
 };
+
+exports.getTeacherIdByUserId = async (userId) => {
+  try {
+    const result = await db.query(
+      `SELECT "teacherId" FROM "Teachers" WHERE "userId" = $1`,
+      [userId]
+    );
+    return result.rows[0] ? result.rows[0].teacherId : null;
+  } catch (err) {
+    throw new Error('Failed to fetch teacher ID');
+  }
+};
