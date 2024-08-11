@@ -71,3 +71,15 @@ exports.loginUser = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const role = req.user.role;
+
+    res.status(200).json({ id: userId, role: role });
+  } catch (err) {
+    console.error('Error fetching user info:', err.message);
+    res.status(500).send('Server error');
+  }
+};
