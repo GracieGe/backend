@@ -17,7 +17,7 @@ exports.createMessage = async ({ conversationId, senderId, text }) => {
 exports.getMessagesByConversationId = async (conversationId) => {
   try {
     const result = await db.query(
-      `SELECT * FROM "Messages" WHERE "conversationId" = $1 ORDER BY "created_at" ASC`,
+      `SELECT * FROM "Messages" WHERE "conversationId" = $1 ORDER BY "created_at" DESC`,
       [conversationId]
     );
     return result.rows;
