@@ -93,26 +93,38 @@ exports.getAllConversations = async (req, res) => {
 
   try {
     let conversations;
+    console.log(`User ID: ${userId}, Role: ${role}`);
 
     if (role === 'student') {
       const student = await studentModel.getStudentIdByUserId(userId);
       if (!student) {
+        console.log('No student found for this user');
         return res.status(400).json({ msg: 'No student found for this user' });
       }
+      console.log(`Student ID: ${student.studentId}`);
       conversations = await conversationModel.getConversationsByStudentId(student.studentId);
     } else if (role === 'teacher') {
       const teacher = await teacherModel.getTeacherIdByUserId(userId);
       if (!teacher) {
+        console.log('No teacher found for this user');
         return res.status(400).json({ msg: 'No teacher found for this user' });
       }
+      console.log(`Teacher ID: ${teacher.teacherId}`);
       conversations = await conversationModel.getConversationsByTeacherId(teacher.teacherId);
     } else {
+      console.log('Invalid role');
       return res.status(400).json({ msg: 'Invalid role' });
+    }
+
+    console.log('Fetched Conversations:', conversations);
+
+    if (!conversations || conversations.length === 0) {
+      return res.status(200).json({ msg: 'No conversations found' });
     }
 
     res.status(200).json(conversations);
   } catch (err) {
     console.error('Error fetching conversations:', err.message);
-    res.status(500).send('Server error');
+    res.status(500).json({ msg: 'Server error' });
   }
 };

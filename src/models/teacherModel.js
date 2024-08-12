@@ -68,7 +68,7 @@ exports.getTeacherIdByUserId = async (userId) => {
       `SELECT "teacherId" FROM "Teachers" WHERE "userId" = $1`,
       [userId]
     );
-    return result.rows[0] ? result.rows[0].teacherId : null;
+    return result.rows[0];
   } catch (err) {
     throw new Error('Failed to fetch teacher ID');
   }

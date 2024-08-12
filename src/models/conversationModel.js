@@ -33,19 +33,22 @@ exports.getConversationsByStudentId = async (studentId) => {
       t."fullName" AS "name",
       t."photo" AS "photo",
       m."text" AS "latestMessage",
-      c."updated_at" AS "messageTime"
+      m."created_at" AS "messageTime"
     FROM 
       "Conversations" c
     JOIN 
       "Teachers" t ON c."teacherId" = t."teacherId"
-    JOIN 
+    LEFT JOIN 
       "Messages" m ON c."conversationId" = m."conversationId"
-    JOIN
-      "Users" u ON m."senderId" = u."userId"
     WHERE 
-      c."studentId" = $1 AND m."created_at" = c."updated_at"
+      c."studentId" = $1
+      AND m."created_at" = (
+        SELECT MAX("created_at") 
+        FROM "Messages" 
+        WHERE "conversationId" = c."conversationId"
+      )
     ORDER BY 
-      c."updated_at" DESC;
+      m."created_at" DESC;
   `;
   const result = await db.query(query, [studentId]);
   return result.rows;
@@ -58,19 +61,22 @@ exports.getConversationsByTeacherId = async (teacherId) => {
       s."fullName" AS "name",
       s."photo" AS "photo",
       m."text" AS "latestMessage",
-      c."updated_at" AS "messageTime"
+      m."created_at" AS "messageTime"
     FROM 
       "Conversations" c
     JOIN 
       "Students" s ON c."studentId" = s."studentId"
-    JOIN 
+    LEFT JOIN 
       "Messages" m ON c."conversationId" = m."conversationId"
-    JOIN
-      "Users" u ON m."senderId" = u."userId"
     WHERE 
-      c."teacherId" = $1 AND m."created_at" = c."updated_at"
+      c."teacherId" = $1
+      AND m."created_at" = (
+        SELECT MAX("created_at") 
+        FROM "Messages" 
+        WHERE "conversationId" = c."conversationId"
+      )
     ORDER BY 
-      c."updated_at" DESC;
+      m."created_at" DESC;
   `;
   const result = await db.query(query, [teacherId]);
   return result.rows;
