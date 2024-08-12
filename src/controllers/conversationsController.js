@@ -106,3 +106,16 @@ exports.getAllConversations = async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 };
+
+exports.markMessagesAsRead = async (req, res) => {
+  const { conversationId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    await messageModel.markMessagesAsRead(conversationId, userId);
+    res.status(200).json({ msg: 'Messages marked as read' });
+  } catch (err) {
+    console.error('Error marking messages as read:', err.message);
+    res.status(500).send('Server error');
+  }
+};

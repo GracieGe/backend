@@ -33,7 +33,12 @@ exports.getConversationsByStudentId = async (studentId) => {
       t."fullName" AS "name",
       t."photo" AS "photo",
       m."text" AS "latestMessage",
-      m."created_at" AS "messageTime"
+      m."created_at" AS "messageTime",
+      (SELECT COUNT(*) 
+       FROM "Messages" 
+       WHERE "conversationId" = c."conversationId"
+       AND "isRead" = FALSE
+       AND "senderId" != $1) AS "unreadCount"
     FROM 
       "Conversations" c
     JOIN 
@@ -61,7 +66,12 @@ exports.getConversationsByTeacherId = async (teacherId) => {
       s."fullName" AS "name",
       s."photo" AS "photo",
       m."text" AS "latestMessage",
-      m."created_at" AS "messageTime"
+      m."created_at" AS "messageTime",
+      (SELECT COUNT(*) 
+       FROM "Messages" 
+       WHERE "conversationId" = c."conversationId"
+       AND "isRead" = FALSE
+       AND "senderId" != $1) AS "unreadCount"
     FROM 
       "Conversations" c
     JOIN 

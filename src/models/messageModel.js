@@ -6,8 +6,8 @@ exports.createMessage = async ({ conversationId, senderId, text }) => {
     await client.query('BEGIN');
 
     const result = await client.query(
-      `INSERT INTO "Messages" ("conversationId", "senderId", "text", "created_at") 
-       VALUES ($1, $2, $3, NOW()) 
+      `INSERT INTO "Messages" ("conversationId", "senderId", "text", "created_at", "isRead") 
+       VALUES ($1, $2, $3, NOW(), FALSE) 
        RETURNING "messageId", "created_at"`,
       [conversationId, senderId, text]
     );
@@ -38,5 +38,20 @@ exports.getMessagesByConversationId = async (conversationId) => {
     return result.rows;
   } catch (err) {
     throw new Error('Failed to fetch messages');
+  }
+};
+
+exports.markMessagesAsRead = async (conversationId, userId) => {
+  try {
+    await db.query(
+      `UPDATE "Messages" 
+       SET "isRead" = TRUE 
+       WHERE "conversationId" = $1 
+       AND "senderId" != $2 
+       AND "isRead" = FALSE`,
+      [conversationId, userId]
+    );
+  } catch (err) {
+    throw new Error('Failed to mark messages as read');
   }
 };
