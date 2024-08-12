@@ -1,7 +1,7 @@
 const db = require('./db');
 
 exports.createMessage = async ({ conversationId, senderId, text }) => {
-  const client = await db.getClient(); // 使用 getClient 获取客户端
+  const client = await db.getClient(); 
   try {
     await client.query('BEGIN');
 
@@ -25,7 +25,7 @@ exports.createMessage = async ({ conversationId, senderId, text }) => {
     await client.query('ROLLBACK');
     throw new Error('Failed to create message');
   } finally {
-    client.release(); // 确保在最后释放客户端
+    client.release(); 
   }
 };
 
