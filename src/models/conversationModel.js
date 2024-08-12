@@ -25,3 +25,53 @@ exports.getConversationByStudentAndTeacher = async (studentId, teacherId) => {
     throw new Error('Failed to fetch conversation');
   }
 };
+
+exports.getConversationsByStudentId = async (studentId) => {
+  const query = `
+    SELECT 
+      c."conversationId",
+      t."fullName" AS "name",
+      t."photo" AS "photo",
+      m."text" AS "latestMessage",
+      c."updated_at" AS "messageTime"
+    FROM 
+      "Conversations" c
+    JOIN 
+      "Teachers" t ON c."teacherId" = t."teacherId"
+    JOIN 
+      "Messages" m ON c."conversationId" = m."conversationId"
+    JOIN
+      "Users" u ON m."senderId" = u."userId"
+    WHERE 
+      c."studentId" = $1 AND m."created_at" = c."updated_at"
+    ORDER BY 
+      c."updated_at" DESC;
+  `;
+  const result = await db.query(query, [studentId]);
+  return result.rows;
+};
+
+exports.getConversationsByTeacherId = async (teacherId) => {
+  const query = `
+    SELECT 
+      c."conversationId",
+      s."fullName" AS "name",
+      s."photo" AS "photo",
+      m."text" AS "latestMessage",
+      c."updated_at" AS "messageTime"
+    FROM 
+      "Conversations" c
+    JOIN 
+      "Students" s ON c."studentId" = s."studentId"
+    JOIN 
+      "Messages" m ON c."conversationId" = m."conversationId"
+    JOIN
+      "Users" u ON m."senderId" = u."userId"
+    WHERE 
+      c."teacherId" = $1 AND m."created_at" = c."updated_at"
+    ORDER BY 
+      c."updated_at" DESC;
+  `;
+  const result = await db.query(query, [teacherId]);
+  return result.rows;
+};

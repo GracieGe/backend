@@ -12,4 +12,7 @@ router.get('/:conversationId/messages', auth, conversationsController.getMessage
 // 发送消息
 router.post('/:conversationId/messages', auth, conversationsController.sendMessage);
 
+// 获取所有会话信息
+router.get('/all', auth, conversationsController.getAllConversations);
+
 module.exports = router;

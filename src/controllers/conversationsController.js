@@ -86,3 +86,33 @@ exports.sendMessage = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getAllConversations = async (req, res) => {
+  const userId = req.user.id;
+  const role = req.user.role;
+
+  try {
+    let conversations;
+
+    if (role === 'student') {
+      const student = await studentModel.getStudentIdByUserId(userId);
+      if (!student) {
+        return res.status(400).json({ msg: 'No student found for this user' });
+      }
+      conversations = await conversationModel.getConversationsByStudentId(student.studentId);
+    } else if (role === 'teacher') {
+      const teacher = await teacherModel.getTeacherIdByUserId(userId);
+      if (!teacher) {
+        return res.status(400).json({ msg: 'No teacher found for this user' });
+      }
+      conversations = await conversationModel.getConversationsByTeacherId(teacher.teacherId);
+    } else {
+      return res.status(400).json({ msg: 'Invalid role' });
+    }
+
+    res.status(200).json(conversations);
+  } catch (err) {
+    console.error('Error fetching conversations:', err.message);
+    res.status(500).send('Server error');
+  }
+};
