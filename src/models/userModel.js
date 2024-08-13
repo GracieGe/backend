@@ -19,3 +19,11 @@ exports.getUserByPhoneNumber = async (phoneNumber) => {
   );
   return result.rows[0];
 };
+
+exports.updatePhoneNumber = async (userId, newPhoneNumber) => {
+  const result = await db.query(
+    `UPDATE "Users" SET "phoneNumber" = $1 WHERE "userId" = $2 RETURNING *`,
+    [newPhoneNumber, userId]
+  );
+  return result.rows[0];
+};

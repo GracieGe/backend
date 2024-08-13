@@ -6,5 +6,6 @@ const auth = require('../middleware/auth');
 router.post('/signup', userController.createUser);
 router.post('/login', userController.loginUser);
 router.get('/me', auth, userController.getCurrentUser); 
+router.put('/update-phone', auth, userController.updatePhoneNumber);
 
 module.exports = router;

@@ -83,3 +83,31 @@ exports.getCurrentUser = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.updatePhoneNumber = async (req, res) => {
+  const userId = req.user.id;
+  const { newPhoneNumber } = req.body;
+
+  try {
+    // check whether new phone number already exists
+    const existingUser = await userModel.getUserByPhoneNumber(newPhoneNumber);
+    if (existingUser) {
+      return res.status(400).json({ msg: 'Phone number already exists' });
+    }
+
+    // update new phone number
+    const updatedUser = await userModel.updatePhoneNumber(userId, newPhoneNumber);
+
+    res.status(200).json({
+      msg: 'Phone number updated successfully',
+      user: {
+        id: updatedUser.userId,
+        phoneNumber: updatedUser.phoneNumber,
+        role: updatedUser.role
+      }
+    });
+  } catch (err) {
+    console.error('Error updating phone number:', err.message);
+    res.status(500).send('Server error');
+  }
+};
