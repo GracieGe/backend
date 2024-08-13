@@ -20,10 +20,26 @@ exports.getUserByPhoneNumber = async (phoneNumber) => {
   return result.rows[0];
 };
 
+exports.getUserById = async (userId) => {
+  const result = await db.query(
+    `SELECT * FROM "Users" WHERE "userId" = $1`,
+    [userId]
+  );
+  return result.rows[0];
+};
+
 exports.updatePhoneNumber = async (userId, newPhoneNumber) => {
   const result = await db.query(
     `UPDATE "Users" SET "phoneNumber" = $1 WHERE "userId" = $2 RETURNING *`,
     [newPhoneNumber, userId]
+  );
+  return result.rows[0];
+};
+
+exports.updateUserPassword = async (userId, newPassword) => {
+  const result = await db.query(
+    `UPDATE "Users" SET "password" = $1 WHERE "userId" = $2 RETURNING *`,
+    [newPassword, userId]
   );
   return result.rows[0];
 };

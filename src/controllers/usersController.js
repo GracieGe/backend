@@ -111,3 +111,27 @@ exports.updatePhoneNumber = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.changePassword = async (req, res) => {
+  const userId = req.user.id;  
+  const { oldPassword, newPassword } = req.body;  
+
+  try {
+    const user = await userModel.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // check if the old password is correct
+    if (user.password !== oldPassword) {
+      return res.status(400).json({ msg: 'Incorrect old password' });
+    }
+
+    // update new password
+    const updatedUser = await userModel.updateUserPassword(userId, newPassword);
+    res.status(200).json({ msg: 'Password updated successfully', user: { id: updatedUser.userId, phoneNumber: updatedUser.phoneNumber, role: updatedUser.role } });
+  } catch (err) {
+    console.error('Error changing password:', err.message);
+    res.status(500).send('Server error');
+  }
+};

@@ -7,5 +7,6 @@ router.post('/signup', userController.createUser);
 router.post('/login', userController.loginUser);
 router.get('/me', auth, userController.getCurrentUser); 
 router.put('/update-phone', auth, userController.updatePhoneNumber);
+router.put('/change-password', auth, userController.changePassword);
 
 module.exports = router;
