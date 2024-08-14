@@ -5,6 +5,7 @@ const auth = require('../middleware/auth');
 
 router.get('/signed', teachersController.getSignedTeachers);
 router.get('/byCourse', auth, teachersController.getSignedTeachersByCourseId);
+router.get('/myCourses', auth, teachersController.getCoursesByUserId);
 router.get('/:teacherId', teachersController.getTeacherById);
 
 module.exports = router;

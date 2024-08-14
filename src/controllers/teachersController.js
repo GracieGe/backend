@@ -35,3 +35,25 @@ exports.getSignedTeachersByCourseId = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getCoursesByUserId = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const teacherData = await teacherModel.getTeacherIdByUserId(userId);
+    
+    if (!teacherData) {
+      console.error('No teacher found for this user ID');
+      return res.status(404).json({ msg: 'Teacher not found' });
+    }
+    
+    const teacherId = teacherData.teacherId;
+
+    const courses = await teacherModel.getCoursesByTeacherId(teacherId);
+
+    res.json(courses);
+  } catch (err) {
+    console.error('Error fetching courses:', err);
+    res.status(500).send('Server error');
+  }
+};
