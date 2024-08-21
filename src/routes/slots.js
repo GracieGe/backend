@@ -6,5 +6,6 @@ const auth = require('../middleware/auth');
 router.get('/availableSlots', slotsController.getAvailableSlots);
 router.post('/updateSlot', slotsController.updateSlot);
 router.post('/cancelSession', auth, slotsController.cancelSession);
+router.post('/createSlot', auth, slotsController.createSlot);
 
 module.exports = router;

@@ -57,3 +57,16 @@ exports.getCoursesByUserId = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getTeacherDetailsByUserId = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+
+    const teacherDetails = await teacherModel.getTeacherDetailsByUserId(userId);
+    
+    res.json(teacherDetails); 
+  } catch (err) {
+    console.error('Error fetching teacher details:', err.message);
+    res.status(500).send('Server error');
+  }
+};

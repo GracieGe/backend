@@ -50,3 +50,30 @@ exports.unbookSlot = async (slotId) => {
     throw new Error('Failed to unbook slot');
   }
 };
+
+exports.insertSlot = async (slotData) => {
+  const {
+    teacherId,
+    timeOfSubmission,
+    location,
+    date,
+    startTime,
+    endTime,
+  } = slotData;
+
+  const query = `
+    INSERT INTO "Slots" ("teacherId", "timeOfSubmission", "location", "date", "startTime", "endTime")
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+  `;
+
+  const values = [teacherId, timeOfSubmission, location, date, startTime, endTime];
+
+  try {
+    const result = await db.query(query, values);
+    return result.rows[0]; 
+  } catch (err) {
+    console.error('Error inserting slot:', err.message);
+    throw err;
+  }
+};

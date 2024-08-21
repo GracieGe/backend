@@ -1,5 +1,6 @@
 const slotModel = require('../models/slotModel');
 const sessionModel = require('../models/sessionModel');
+const teacherModel = require('../models/teacherModel');
 
 exports.getAvailableSlots = async (req, res) => {
   const { teacherId, date } = req.query; 
@@ -46,6 +47,39 @@ exports.cancelSession = async (req, res) => {
     res.status(200).json({ message: 'Session cancelled and slot unbooked successfully' });
   } catch (err) {
     console.error('Error cancelling session:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.createSlot = async (req, res) => {
+  try {
+    const { location, date, startTime, endTime } = req.body;
+    const userId = req.user.id; 
+
+    if (!date || !startTime || !endTime) {
+      return res.status(400).json({ message: 'Date, start time, and end time are required' });
+    }
+
+    const teacherData = await teacherModel.getTeacherIdByUserId(userId);
+    if (!teacherData) {
+      return res.status(404).json({ message: 'Teacher not found for this user' });
+    }
+    const teacherId = teacherData.teacherId;
+
+    const slotData = {
+      teacherId,
+      timeOfSubmission: new Date(), 
+      location: location || null, 
+      date,
+      startTime,
+      endTime,
+    };
+
+    const newSlot = await slotModel.insertSlot(slotData);
+
+    res.status(201).json(newSlot);
+  } catch (err) {
+    console.error('Error creating slot:', err.message);
     res.status(500).send('Server error');
   }
 };

@@ -94,3 +94,22 @@ exports.getCoursesByTeacherId = async (teacherId) => {
     throw new Error('Failed to fetch courses');
   }
 };
+
+exports.getTeacherDetailsByUserId = async (userId) => {
+  try {
+    const result = await db.query(`
+      SELECT "teacherId", "fullName", "photo"
+      FROM "Teachers"
+      WHERE "userId" = $1
+    `, [userId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Teacher not found');
+    }
+
+    return result.rows[0]; 
+  } catch (err) {
+    console.error('Error fetching teacher details:', err.message);
+    throw err;
+  }
+};
