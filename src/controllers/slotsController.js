@@ -83,3 +83,22 @@ exports.createSlot = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getTeacherSlots = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const teacherData = await teacherModel.getTeacherIdByUserId(userId);
+    if (!teacherData) {
+      return res.status(404).json({ message: 'Teacher not found for this user' });
+    }
+
+    const teacherId = teacherData.teacherId;
+    const slots = await slotModel.getTeacherSlotsWithCourseImage(teacherId);
+
+    res.json(slots);
+  } catch (err) {
+    console.error('Error fetching teacher slots:', err.message);
+    res.status(500).send('Server error');
+  }
+};

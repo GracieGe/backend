@@ -77,3 +77,30 @@ exports.insertSlot = async (slotData) => {
     throw err;
   }
 };
+
+exports.getTeacherSlotsWithCourseImage = async (teacherId) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+         "Slots"."slotId",
+         "Slots"."date", 
+         "Slots"."startTime", 
+         "Slots"."endTime", 
+         "Slots"."location", 
+         "Slots"."status", 
+         "Courses"."image"
+       FROM 
+         "Slots"
+       INNER JOIN 
+         "Teachers" ON "Slots"."teacherId" = "Teachers"."teacherId"
+       INNER JOIN 
+         "Courses" ON "Teachers"."courseId" = "Courses"."courseId"
+       WHERE 
+         "Slots"."teacherId" = $1`,
+      [teacherId]
+    );
+    return result.rows;
+  } catch (err) {
+    throw new Error('Failed to fetch teacher slots with course image');
+  }
+};
