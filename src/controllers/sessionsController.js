@@ -1,5 +1,6 @@
 const sessionModel = require('../models/sessionModel');
 const studentModel = require('../models/studentModel');
+const teacherModel = require('../models/teacherModel');
 const { uploadAudio } = require('../middleware/upload');
 
 exports.addSession = async (req, res) => {
@@ -43,6 +44,26 @@ exports.getActiveSessionsByStudentId = async (req, res) => {
   }
 };
 
+exports.getActiveSessionsByTeacherId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain teacherId
+    const teacher = await teacherModel.getTeacherIdByUserId(userId);
+    if (!teacher) {
+      return res.status(404).json({ msg: 'Teacher not found' });
+    }
+    const teacherId = teacher.teacherId;
+
+    // obtain active sessions
+    const sessions = await sessionModel.getActiveSessionsByTeacherId(teacherId);   
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching active sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 exports.updateCompletedSessionStatus = async (req, res) => {
   const { sessionId } = req.body;
 
@@ -79,6 +100,26 @@ exports.getCompletedSessionsByStudentId = async (req, res) => {
   }
 };
 
+exports.getCompletedSessionsByTeacherId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain teacherId
+    const teacher = await teacherModel.getTeacherIdByUserId(userId);
+    if (!teacher) {
+      return res.status(404).json({ msg: 'Teacher not found' });
+    }
+    const teacherId = teacher.teacherId;
+
+    // obtain completed sessions
+    const sessions = await sessionModel.getCompletedSessionsByTeacherId(teacherId);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching completed sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 exports.updateCancelledSessionStatus = async (req, res) => {
   const { sessionId } = req.body;
 
@@ -108,6 +149,26 @@ exports.getCancelledSessionsByStudentId = async (req, res) => {
 
     // obtain completed sessions
     const sessions = await sessionModel.getCancelledSessionsByStudentId(studentId);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error('Error fetching cancelled sessions:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.getCancelledSessionsByTeacherId = async (req, res) => {
+  const userId = req.user.id; 
+
+  try {
+    // obtain teacherId
+    const teacher = await teacherModel.getTeacherIdByUserId(userId);
+    if (!teacher) {
+      return res.status(404).json({ msg: 'Teacher not found' });
+    }
+    const teacherId = teacher.teacherId;
+
+    // obtain completed sessions
+    const sessions = await sessionModel.getCancelledSessionsByTeacherId(teacherId);
     res.status(200).json(sessions);
   } catch (err) {
     console.error('Error fetching cancelled sessions:', err.message);

@@ -42,6 +42,38 @@ exports.getActiveSessionsByStudentId = async (studentId) => {
   }
 };
 
+exports.getActiveSessionsByTeacherId = async (teacherId) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        s."sessionId",
+        s."slotId",
+        s."date",
+        s."startTime",
+        s."endTime",
+        s."location",
+        st."fullName",
+        c."courseName",
+        c."grade",
+        c."image"
+      FROM 
+        "Sessions" s
+      JOIN 
+        "Students" st ON s."studentId" = st."studentId"
+      JOIN 
+        "Teachers" t ON s."teacherId" = t."teacherId"
+      JOIN 
+        "Courses" c ON t."courseId" = c."courseId"
+      WHERE 
+        s."teacherId" = $1 AND s."status" = 'Active'`,
+      [teacherId]
+    );
+    return result.rows;
+  } catch (err) {   
+    throw new Error('Failed to fetch active sessions');
+  }
+};
+
 exports.updateCompletedSessionStatus = async (sessionId, status) => {
   try {
     await db.query(
@@ -84,6 +116,37 @@ exports.getCompletedSessionsByStudentId = async (studentId) => {
   }
 };
 
+exports.getCompletedSessionsByTeacherId = async (teacherId) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        s."sessionId",
+        s."date",
+        s."startTime",
+        s."endTime",
+        s."location",
+        st."fullName",
+        c."courseName",
+        c."grade",
+        c."image"
+      FROM 
+        "Sessions" s
+      JOIN 
+        "Students" st ON s."studentId" = st."studentId"
+      JOIN 
+        "Teachers" t ON s."teacherId" = t."teacherId"
+      JOIN 
+        "Courses" c ON t."courseId" = c."courseId"
+      WHERE 
+        s."teacherId" = $1 AND s."status" = 'Completed'`,
+      [teacherId]
+    );
+    return result.rows;
+  } catch (err) {
+    throw new Error('Failed to fetch completed sessions');
+  }
+};
+
 exports.updateCancelledSessionStatus = async (sessionId, status) => {
   try {
     await db.query(
@@ -119,6 +182,37 @@ exports.getCancelledSessionsByStudentId = async (studentId) => {
       WHERE 
         s."studentId" = $1 AND s."status" = 'Cancelled'`,
       [studentId]
+    );
+    return result.rows;
+  } catch (err) {
+    throw new Error('Failed to fetch cancelled sessions');
+  }
+};
+
+exports.getCancelledSessionsByTeacherId = async (teacherId) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        s."sessionId",
+        s."date",
+        s."startTime",
+        s."endTime",
+        s."location",
+        st."fullName",
+        c."courseName",
+        c."grade",
+        c."image"
+      FROM 
+        "Sessions" s
+      JOIN 
+        "Students" st ON s."studentId" = st."studentId"
+      JOIN 
+        "Teachers" t ON s."teacherId" = t."teacherId"
+      JOIN 
+        "Courses" c ON t."courseId" = c."courseId"
+      WHERE 
+        s."teacherId" = $1 AND s."status" = 'Cancelled'`,
+      [teacherId]
     );
     return result.rows;
   } catch (err) {
