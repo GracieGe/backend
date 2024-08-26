@@ -16,3 +16,16 @@ exports.getStudentIdByUserId = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.getStudentDetailsByUserId = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+
+    const studentDetails = await studentModel.getStudentDetailsByUserId(userId);
+    
+    res.json(studentDetails); 
+  } catch (err) {
+    console.error('Error fetching student details:', err.message);
+    res.status(500).send('Server error');
+  }
+};

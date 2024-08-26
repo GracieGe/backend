@@ -11,3 +11,22 @@ exports.getStudentIdByUserId = async (userId) => {
     throw new Error('Failed to fetch student ID');
   }
 };
+
+exports.getStudentDetailsByUserId = async (userId) => {
+  try {
+    const result = await db.query(`
+      SELECT "studentId", "fullName", "photo", "email"
+      FROM "Students"
+      WHERE "userId" = $1
+    `, [userId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Student not found');
+    }
+
+    return result.rows[0]; 
+  } catch (err) {
+    console.error('Error fetching student details:', err.message);
+    throw err;
+  }
+};
