@@ -98,7 +98,7 @@ exports.getCoursesByTeacherId = async (teacherId) => {
 exports.getTeacherDetailsByUserId = async (userId) => {
   try {
     const result = await db.query(`
-      SELECT "teacherId", "fullName", "photo"
+      SELECT "teacherId", "fullName", "photo", "email"
       FROM "Teachers"
       WHERE "userId" = $1
     `, [userId]);
