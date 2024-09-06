@@ -46,6 +46,10 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
+    if (!user.active) {
+      return res.status(403).json({ msg: 'Your account is deactivated. Please contact administrators to activate your account first.' });
+    }
+
     if (password !== user.password) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
